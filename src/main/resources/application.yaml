@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: nst
+  datasource:
+    url: jdbc:mysql://localhost:3306/nst_db
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8090
+  servlet:
+    context-path: /api/v1
