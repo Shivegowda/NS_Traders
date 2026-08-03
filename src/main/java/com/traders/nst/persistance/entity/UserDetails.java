@@ -3,7 +3,7 @@ package com.traders.nst.persistance.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 
 @Entity
