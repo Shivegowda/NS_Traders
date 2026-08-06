@@ -1,9 +1,7 @@
 package com.traders.nst.persistance.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.traders.nst.enums.FarmerStatus;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -17,6 +15,7 @@ public class FarmerDetails {
     private String farmerName;
     private String mobileNumber;
     private String address;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private FarmerStatus status;
     private Timestamp createdDate;
 }
