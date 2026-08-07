@@ -1,24 +1,19 @@
 package com.traders.nst.DTO.Request;
 
-import com.traders.nst.enums.ActivationStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import java.io.Serializable;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FarmerRequest implements Serializable {
-    private Long farmerId;
-    private ActivationStatus status;
+public class ProductRequest {
     @NotBlank(message = "Invalid field value")
-    private String farmerName;
+    private String productName;
     @NotBlank(message = "Invalid field value")
-    private String mobileNumber;
+    private String productDescription;
     @NotBlank(message = "Invalid field value")
-    private String address;
+    private Double productRate;
+    private Long  productId;
 }

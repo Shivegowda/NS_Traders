@@ -1,6 +1,7 @@
 package com.traders.nst.Controller;
 
 import com.traders.nst.DTO.Request.FarmerRequest;
+import com.traders.nst.DTO.Response.DropDownResponse;
 import com.traders.nst.persistance.entity.FarmerDetails;
 import com.traders.nst.service.FarmersService;
 import jakarta.validation.Valid;
@@ -31,4 +32,10 @@ public class FarmersController {
     public FarmerDetails editFarmer(@RequestBody FarmerRequest farmerRequest){
         return farmersService.updateFarmer(farmerRequest);
     }
+
+    @GetMapping("/dropDownList")
+    public List<DropDownResponse> dropDownList(){
+        return farmersService.getActiveFarmers();
+    }
+
 }

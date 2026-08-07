@@ -1,5 +1,5 @@
 package com.traders.nst.enums;
 
-public enum FarmerStatus {
+public enum ActivationStatus {
     ACTIVE, INACTIVE;
 }

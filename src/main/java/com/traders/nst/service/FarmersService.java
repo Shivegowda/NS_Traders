@@ -1,7 +1,8 @@
 package com.traders.nst.service;
 
 import com.traders.nst.DTO.Request.FarmerRequest;
-import com.traders.nst.enums.FarmerStatus;
+import com.traders.nst.DTO.Response.DropDownResponse;
+import com.traders.nst.enums.ActivationStatus;
 import com.traders.nst.mapper.RequestMapper;
 import com.traders.nst.persistance.entity.FarmerDetails;
 import com.traders.nst.persistance.repository.FarmerDetailsRepository;
@@ -32,7 +33,7 @@ public class FarmersService {
 
     public FarmerDetails saveFarmer(FarmerRequest farmerRequest) {
         FarmerDetails farmerDetails = requestMapper.mapFarmerDetailsEntity(farmerRequest);
-        farmerDetails.setStatus(FarmerStatus.ACTIVE);
+        farmerDetails.setStatus(ActivationStatus.ACTIVE);
         farmerDetails.setCreatedDate(Timestamp.from(Instant.now()));
          farmerDetailsRepository.save(farmerDetails);
          return farmerDetails;
@@ -47,5 +48,14 @@ public class FarmersService {
         farmerDetailsRepository.save(farmerDetails);
 
         return farmerDetails;
+    }
+
+    public List<DropDownResponse> getActiveFarmers()  {
+        List<FarmerDetails> farmerDetails = farmerDetailsRepository.findByStatus(ActivationStatus.ACTIVE);
+        List<DropDownResponse> activeFarmers = farmerDetails.stream()
+                .map(f-> new DropDownResponse(f.getFarmerId().toString(),f.getFarmerName()+ "-"+f.getMobileNumber()))
+                .toList();
+
+        return activeFarmers;
     }
 }

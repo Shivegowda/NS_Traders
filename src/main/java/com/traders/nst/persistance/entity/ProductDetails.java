@@ -8,14 +8,14 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-public class FarmerDetails {
+public class ProductDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long farmerId;
-    private String farmerName;
-    private String mobileNumber;
-    private String address;
+    private Long productId;
+    private String productName;
+    private String productDescription;
+    private Double productRate;
     @Enumerated(EnumType.STRING)
-    private ActivationStatus status;
-    private Timestamp createdDate;
+    private ActivationStatus productStatus;
+    private Timestamp rateChangeDate;
 }
