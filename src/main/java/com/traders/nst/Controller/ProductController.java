@@ -1,6 +1,7 @@
 package com.traders.nst.Controller;
 
 import com.traders.nst.DTO.Request.ProductRequest;
+import com.traders.nst.DTO.Response.ProductListResponse;
 import com.traders.nst.persistance.entity.ProductDetails;
 import com.traders.nst.service.ProductService;
 import jakarta.validation.Valid;
@@ -28,6 +29,11 @@ public class ProductController {
     @PutMapping("/edit")
     public ProductDetails updateProduct(@RequestBody ProductRequest productRequest) {
         return productService.updateProduct(productRequest);
+    }
+
+    @GetMapping("/list")
+    public List<ProductListResponse>  getProductList() {
+
     }
 
 }

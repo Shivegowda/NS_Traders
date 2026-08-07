@@ -1,6 +1,7 @@
 package com.traders.nst.service;
 
 import com.traders.nst.DTO.Request.ProductRequest;
+import com.traders.nst.DTO.Response.ProductListResponse;
 import com.traders.nst.enums.ActivationStatus;
 import com.traders.nst.mapper.RequestMapper;
 import com.traders.nst.persistance.entity.ProductDetails;
@@ -46,5 +47,8 @@ public class ProductService {
         }
         productDetailsRepository.save(productDetails);
         return productDetails;
+    }
+    public List<ProductListResponse> getProductList() {
+
     }
 }
