@@ -3,6 +3,7 @@ package com.traders.nst.Controller;
 import com.traders.nst.DTO.Request.ProductRequest;
 import com.traders.nst.DTO.Response.ProductListResponse;
 import com.traders.nst.persistance.entity.ProductDetails;
+import com.traders.nst.persistance.entity.ProductRateHistory;
 import com.traders.nst.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +37,13 @@ public class ProductController {
     return productService.getProductList();
     }
 
+    @PutMapping("/active")
+    public ProductDetails activeProduct(@RequestBody ProductRequest productRequest) {
+        return productService.markActiveInactiveProduct(productRequest);
+    }
+
+    @GetMapping("/history")
+    public List<ProductRateHistory> getProductHistory(@RequestParam(required = true) Long productId) {
+        return productService.getProductRateHistory(productId);
+    }
 }
