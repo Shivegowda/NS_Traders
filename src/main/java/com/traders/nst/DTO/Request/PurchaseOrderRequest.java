@@ -5,7 +5,8 @@ import lombok.Data;
 
 
 @Data
-public class InwardOrderRequest {
+public class PurchaseOrderRequest {
+    private Long orderId;
     private Long productId;
     private String productName;
     private Double rate;

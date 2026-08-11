@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-public class InwardOrderDetails {
+public class PurchaseOrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
