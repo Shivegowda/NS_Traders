@@ -1,9 +1,19 @@
 package com.traders.nst.service;
 
+import com.traders.nst.DTO.Response.LoginResponse;
+import com.traders.nst.DTO.common.ResponseDTO;
 import com.traders.nst.persistance.entity.UserDetails;
 import com.traders.nst.persistance.repository.UserDetailsRepository;
+import com.traders.nst.util.CommonUtilityFunction;
+import com.traders.nst.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+import static com.traders.nst.enums.ResponseEnum.SUCCESS;
 
 @Service
 public class LoginService {
@@ -11,14 +21,22 @@ public class LoginService {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
 
-    public String login(String username, String password) {
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    public ResponseEntity<ResponseDTO<LoginResponse>> login(String username, String password) {
+        LoginResponse loginResponse = new LoginResponse();
         UserDetails userDetails = userDetailsRepository.findByUserName(username);
+        String uuid =  UUID.randomUUID().toString();
         if (userDetails == null) {
-            return "Invalid username or password";
+           // return "Invalid username or password";
         }
         else if (!userDetails.getPassword().equals(password)) {
-            return "Invalid username or password";
+          //  return "Invalid username or password";
         }
-        return "Welcome to NST Traders :"+userDetails.getFullName();
+        String jwtToken = jwtTokenUtil.generateToken(username,uuid);
+        loginResponse.setJwtToken(jwtToken);
+        loginResponse.setUserName(username);
+        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(loginResponse,SUCCESS.name()), HttpStatus.OK);
     }
 }
