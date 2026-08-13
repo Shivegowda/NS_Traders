@@ -1,6 +1,8 @@
 spring:
   application:
     name: nst
+    jwt:
+      secret: "nstAdminUserEncryptionKeyLocal9f8e7d6c5b4a3f2e"
   datasource:
     url: jdbc:mysql://localhost:3306/nst_db
     username: root

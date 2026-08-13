@@ -17,8 +17,5 @@ public class UserDetails {
     private String fullName;
     private String password;
     private String mobNo;
-    private String jwtToken;
-    private Timestamp lastLogin;
     private Timestamp created;
-    private Timestamp tokenExpiry;
 }
