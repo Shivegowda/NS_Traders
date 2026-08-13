@@ -37,4 +37,11 @@ public class CommonUtilityFunction {
         return responseDTO;
     }
 
+    public static <T> ResponseDTO<T> mapError(Integer errorCode,String message)   {
+        ResponseDTO<T> responseDTO = new ResponseDTO<>();
+        responseDTO.setMessage(message);
+        responseDTO.setErrorCode(errorCode);
+        return responseDTO;
+    }
+
 }
