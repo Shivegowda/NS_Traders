@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static com.traders.nst.enums.ResponseEnum.SUCCESS;
-import static com.traders.nst.exception.enums.ResponseEnum.INVALID_USER_CREDS;
+import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.INVALID_USER_CREDS;
 
 @Service
 public class LoginService {

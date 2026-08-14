@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.io.IOException;
 
-import static com.traders.nst.exception.enums.ResponseEnum.*;
+import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.*;
 
 @Slf4j
 @RestControllerAdvice

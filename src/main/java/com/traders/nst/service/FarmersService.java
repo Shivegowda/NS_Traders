@@ -18,6 +18,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static com.traders.nst.enums.ResponseEnum.SUCCESS;
+
 @Service
 public class FarmersService {
     @Autowired
@@ -28,10 +30,10 @@ public class FarmersService {
 
     public ResponseEntity<ResponseDTO<FarmerDetails>> findAll(String name) {
         if(null==name || name.isEmpty()) {
-            return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetailsRepository.findAll(),"SUCCESS"),HttpStatus.OK);
+            return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetailsRepository.findAll(),SUCCESS.name()),HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetailsRepository.findByFarmerNameLike("%"+name+"%"),"SUCCESS"),HttpStatus.OK);
+            return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetailsRepository.findByFarmerNameLike("%"+name+"%"),SUCCESS.name()),HttpStatus.OK);
         }
     }
 
@@ -40,7 +42,7 @@ public class FarmersService {
         farmerDetails.setStatus(ActivationStatus.ACTIVE);
         farmerDetails.setCreatedDate(Timestamp.from(Instant.now()));
          farmerDetailsRepository.save(farmerDetails);
-         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetails,"Success"), HttpStatus.OK);
+         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetails,SUCCESS.name()), HttpStatus.OK);
     }
 
     public ResponseEntity<ResponseDTO<FarmerDetails>> updateFarmer(FarmerRequest farmerRequest) {
@@ -51,7 +53,7 @@ public class FarmersService {
         Optional.ofNullable(farmerRequest.getMobileNumber()).ifPresent(farmerDetails::setMobileNumber);
         farmerDetailsRepository.save(farmerDetails);
 
-        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetails,"Success"), HttpStatus.OK);
+        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(farmerDetails,SUCCESS.name()), HttpStatus.OK);
     }
 
     public ResponseEntity<ResponseDTO<DropDownResponse>> getActiveFarmers()  {
@@ -60,6 +62,6 @@ public class FarmersService {
                 .map(f-> new DropDownResponse(f.getFarmerId().toString(),f.getFarmerName()+ "-"+f.getMobileNumber()))
                 .toList();
 
-        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(activeFarmers,"SUCCESS"),HttpStatus.OK);
+        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(activeFarmers,SUCCESS.name()),HttpStatus.OK);
     }
 }
