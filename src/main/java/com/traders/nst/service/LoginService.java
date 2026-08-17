@@ -9,11 +9,13 @@ import com.traders.nst.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static com.traders.nst.enums.ResponseEnum.SUCCESS;
+import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.INVALID_USER_CREDS;
 
 @Service
 public class LoginService {
@@ -29,10 +31,10 @@ public class LoginService {
         UserDetails userDetails = userDetailsRepository.findByUserName(username);
         String uuid =  UUID.randomUUID().toString();
         if (userDetails == null) {
-           // return "Invalid username or password";
+            throw new UsernameNotFoundException(INVALID_USER_CREDS.getMessage());
         }
         else if (!userDetails.getPassword().equals(password)) {
-          //  return "Invalid username or password";
+            throw new UsernameNotFoundException(INVALID_USER_CREDS.getMessage());
         }
         String jwtToken = jwtTokenUtil.generateToken(username,uuid);
         loginResponse.setJwtToken(jwtToken);
