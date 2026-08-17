@@ -1,6 +1,7 @@
 package com.traders.nst.service;
 
 import com.traders.nst.DTO.Request.BuyerRequest;
+import com.traders.nst.DTO.Response.DropDownResponse;
 import com.traders.nst.DTO.common.ResponseDTO;
 import com.traders.nst.enums.ActivationStatus;
 import com.traders.nst.mapper.RequestMapper;
@@ -49,6 +50,7 @@ public class BuyersService {
         else {
             Optional.ofNullable(buyerRequest.getBuyerName()).ifPresent(buyerDetails::setBuyerName);
             Optional.ofNullable(buyerRequest.getAddress()).ifPresent(buyerDetails::setAddress);
+            Optional.ofNullable(buyerRequest.getStatus()).ifPresent(buyerDetails::setStatus);
             Optional.ofNullable(buyerRequest.getMobileNumber()).ifPresent(buyerDetails::setMobileNumber);
             buyerDetailsRepository.save(buyerDetails);
             return ResponseEntity.ok(CommonUtilityFunction.mapToResponseDTO(buyerDetails, SUCCESS.name()));
@@ -65,5 +67,13 @@ public class BuyersService {
         buyerDetailsRepository.save(buyerDetails);
         return ResponseEntity.ok(CommonUtilityFunction.mapToResponseDTO(buyerDetails, SUCCESS.name()));
     }
+     }
+
+     public ResponseEntity<ResponseDTO<DropDownResponse>> getBuyerList() {
+        List<BuyerDetails> buyerDetailsList = buyerDetailsRepository.findByStatus(ActivationStatus.ACTIVE);
+         List<DropDownResponse> activeBuyers = buyerDetailsList.stream()
+                 .map(f-> new DropDownResponse(f.getBuyerId().toString(),f.getBuyerName()+ "-"+f.getMobileNumber()))
+                 .toList();
+            return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(activeBuyers,SUCCESS.name()), HttpStatus.OK);
      }
 }

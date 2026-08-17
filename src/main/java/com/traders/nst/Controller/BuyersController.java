@@ -1,12 +1,14 @@
 package com.traders.nst.Controller;
 
 import com.traders.nst.DTO.Request.BuyerRequest;
+import com.traders.nst.DTO.Response.DropDownResponse;
 import com.traders.nst.DTO.common.ResponseDTO;
 import com.traders.nst.persistance.entity.BuyerDetails;
 import com.traders.nst.service.BuyersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/buyers")
@@ -33,5 +35,10 @@ public class BuyersController {
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDTO<BuyerDetails>> deleteBuyerDetails(@RequestParam long id) {
         return buyersService.deleteBuyerDetails(id);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ResponseDTO<DropDownResponse>> listBuyerDetails() {
+        return buyersService.getBuyerList();
     }
 }
