@@ -6,8 +6,8 @@ public enum ResponseErrorCodeEnum {
     UNAUTHORIZED_ERROR(1003,401,"Unauthorized"),
     INVALID_USER_CREDS(1004,401,"Invalid user credentials"),
     INVALID_ORDER_REQUEST(1005,500,"Invalid order request"),
-    PRODUCT_ALREADY_EXISTS(1006,500,"Product already exists");
-
+    PRODUCT_ALREADY_EXISTS(1006,500,"Product already exists"),
+    INVALID_PRODUCT_SELECTED(1007,500,"Invalid product selected");
 
     private final Integer errorCode;
     private final Integer statusCode;

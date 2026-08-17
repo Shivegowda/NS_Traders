@@ -1,13 +1,7 @@
 package com.traders.nst.mapper;
 
-import com.traders.nst.DTO.Request.BuyerRequest;
-import com.traders.nst.DTO.Request.FarmerRequest;
-import com.traders.nst.DTO.Request.PurchaseOrderRequest;
-import com.traders.nst.DTO.Request.ProductRequest;
-import com.traders.nst.persistance.entity.BuyerDetails;
-import com.traders.nst.persistance.entity.FarmerDetails;
-import com.traders.nst.persistance.entity.PurchaseOrderDetails;
-import com.traders.nst.persistance.entity.ProductDetails;
+import com.traders.nst.DTO.Request.*;
+import com.traders.nst.persistance.entity.*;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "Spring")
@@ -20,4 +14,6 @@ public interface RequestMapper {
     PurchaseOrderDetails mapInwardOrderDetailsEntity(PurchaseOrderRequest purchaseOrderRequest);
 
     BuyerDetails mapBuyerDetailsEntity(BuyerRequest buyerRequest);
+
+    SaleOrderDetails mapSaleOrderDetailsEntity(SaleOrderRequest saleOrderRequest);
 }
