@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public List<ProductListResponse>  getProductList() {
+    public ResponseEntity<ResponseDTO<ProductListResponse>>  getProductList() {
     return productService.getProductList();
     }
 

@@ -11,4 +11,5 @@ public class ProductListResponse {
     private Long productId;
     private String productName;
     private Double productRate;
+    private Double netQuantity;
 }

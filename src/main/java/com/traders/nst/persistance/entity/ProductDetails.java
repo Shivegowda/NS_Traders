@@ -18,5 +18,4 @@ public class ProductDetails {
     @Enumerated(EnumType.STRING)
     private ActivationStatus productStatus;
     private Timestamp rateChangeDate;
-    private Double productNetQuantity;
 }

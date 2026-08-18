@@ -7,8 +7,10 @@ import com.traders.nst.enums.ActivationStatus;
 import com.traders.nst.exception.NSTCustomException;
 import com.traders.nst.mapper.RequestMapper;
 import com.traders.nst.mapper.ResponseMapper;
+import com.traders.nst.persistance.entity.InventoryDetails;
 import com.traders.nst.persistance.entity.ProductDetails;
 import com.traders.nst.persistance.entity.ProductRateHistory;
+import com.traders.nst.persistance.repository.InventoryDetailsRepository;
 import com.traders.nst.persistance.repository.ProductDetailsRepository;
 import com.traders.nst.persistance.repository.ProductRateHistoryRepository;
 import com.traders.nst.util.CommonUtilityFunction;
@@ -22,7 +24,9 @@ import org.springframework.util.ObjectUtils;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.traders.nst.enums.ResponseEnum.SUCCESS;
 import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.PRODUCT_ALREADY_EXISTS;
@@ -40,6 +44,9 @@ public class ProductService {
 
     @Autowired
     private ResponseMapper responseMapper;
+
+    @Autowired
+    private InventoryDetailsRepository inventoryDetailsRepository;
 
     public ResponseEntity<ResponseDTO<ProductDetails>> getProductDetails() {
 
@@ -72,8 +79,14 @@ public class ProductService {
         productDetailsRepository.save(productDetails);
         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(productDetails, SUCCESS.name()), HttpStatus.OK);
     }
-    public List<ProductListResponse> getProductList() {
-      return responseMapper.mapProductEntityToListResponse(productDetailsRepository.findByProductStatus(ActivationStatus.ACTIVE));
+    public ResponseEntity<ResponseDTO<ProductListResponse>> getProductList() {
+      List<ProductListResponse> productListResponseList = responseMapper.mapProductEntityToListResponse(productDetailsRepository.findByProductStatus(ActivationStatus.ACTIVE));
+       List<InventoryDetails> inventoryDetailsList = inventoryDetailsRepository.findAll();
+        Map<Long,Double> inventoryLookupMap = inventoryDetailsList.stream().collect(
+                Collectors.toMap(InventoryDetails::getProductId,InventoryDetails::getNetQuantity)
+        );
+        productListResponseList.forEach(product -> {product.setNetQuantity(inventoryLookupMap.getOrDefault(product.getProductId(),0D));});
+        return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(productListResponseList, SUCCESS.name()), HttpStatus.OK);
     }
 
     public ResponseEntity<ResponseDTO<ProductDetails>> markActiveInactiveProduct(ProductRequest productRequest) {
