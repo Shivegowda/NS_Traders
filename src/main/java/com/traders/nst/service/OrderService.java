@@ -5,20 +5,25 @@ import com.traders.nst.DTO.common.ResponseDTO;
 import com.traders.nst.enums.OrderType;
 import com.traders.nst.exception.NSTCustomException;
 import com.traders.nst.mapper.RequestMapper;
+import com.traders.nst.persistance.entity.ProductDetails;
 import com.traders.nst.persistance.entity.PurchaseOrderDetails;
+import com.traders.nst.persistance.repository.ProductDetailsRepository;
 import com.traders.nst.persistance.repository.PurchaseOrderDetailsRepository;
 import com.traders.nst.util.CommonUtilityFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.traders.nst.enums.ResponseEnum.SUCCESS;
 import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.INVALID_ORDER_REQUEST;
+import static com.traders.nst.exception.enums.ResponseErrorCodeEnum.INVALID_PRODUCT_SELECTED;
 
 @Service
 public class OrderService {
@@ -27,6 +32,9 @@ public class OrderService {
 
     @Autowired
     private RequestMapper requestMapper;
+
+    @Autowired
+    private ProductDetailsRepository productDetailsRepository;
 
     public ResponseEntity<ResponseDTO<PurchaseOrderDetails>> addPurchaseDraftOrder(PurchaseOrderRequest purchaseOrderRequest) {
     PurchaseOrderDetails purchaseOrderDetails = requestMapper.mapInwardOrderDetailsEntity(purchaseOrderRequest);
@@ -69,7 +77,20 @@ public class OrderService {
         purchaseOrderDetails.setOrderType(OrderType.ORDER);
         purchaseOrderDetails.setCreatedDate(Timestamp.from(Instant.now()));
         purchaseOrderDetailsRepository.save(purchaseOrderDetails);
+        calculateQuantity(purchaseOrderRequest);
         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(purchaseOrderDetails,SUCCESS.name()), HttpStatus.OK);
+    }
+
+    private void calculateQuantity(PurchaseOrderRequest purchaseOrderRequest) {
+        ProductDetails productDetails = productDetailsRepository.getReferenceById(purchaseOrderRequest.getProductId());
+        if(!ObjectUtils.isEmpty(productDetails)) {
+           Double updatedQuantity = productDetails.getProductNetQuantity() + purchaseOrderRequest.getQuantity();
+            productDetails.setProductNetQuantity(updatedQuantity);
+            productDetailsRepository.save(productDetails);
+        }
+        else {
+            throw new NSTCustomException(INVALID_PRODUCT_SELECTED.getErrorCode(),INVALID_PRODUCT_SELECTED.getMessage());
+        }
     }
 
     public ResponseEntity<ResponseDTO<PurchaseOrderDetails>> deletePurchaseDraftOrderDetails(Long orderId) {
@@ -80,4 +101,6 @@ public class OrderService {
         purchaseOrderDetailsRepository.delete(purchaseOrderDetails);
         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(purchaseOrderDetails,SUCCESS.name()), HttpStatus.OK);
     }
+
+
 }
