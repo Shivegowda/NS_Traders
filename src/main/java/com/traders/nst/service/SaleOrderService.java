@@ -1,23 +1,19 @@
 package com.traders.nst.service;
 
-import com.traders.nst.DTO.Request.PurchaseOrderRequest;
 import com.traders.nst.DTO.Request.SaleOrderRequest;
 import com.traders.nst.DTO.common.ResponseDTO;
 import com.traders.nst.enums.OrderType;
 import com.traders.nst.exception.NSTCustomException;
 import com.traders.nst.mapper.RequestMapper;
-import com.traders.nst.persistance.entity.ProductDetails;
-import com.traders.nst.persistance.entity.PurchaseOrderDetails;
+import com.traders.nst.persistance.entity.InventoryDetails;
 import com.traders.nst.persistance.entity.SaleOrderDetails;
-import com.traders.nst.persistance.repository.ProductDetailsRepository;
+import com.traders.nst.persistance.repository.InventoryDetailsRepository;
 import com.traders.nst.persistance.repository.SaleOrderDetailsRepository;
 import com.traders.nst.util.CommonUtilityFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -36,7 +32,7 @@ public class SaleOrderService {
     private RequestMapper requestMapper;
 
     @Autowired
-    private ProductDetailsRepository productDetailsRepository;
+    private InventoryDetailsRepository inventoryDetailsRepository;
 
 
     public ResponseEntity<ResponseDTO<SaleOrderDetails>> getAllSaleDraftOrders(OrderType orderType) {
@@ -81,16 +77,18 @@ public class SaleOrderService {
         saleOrderDetails.setOrderType(OrderType.ORDER);
         saleOrderDetails.setCreatedDate(Timestamp.from(Instant.now()));
         saleOrderDetailsRepository.save(saleOrderDetails);
-        calculateQuantity(saleOrderRequest);
+        calculateQuantity(saleOrderDetails);
         return new ResponseEntity<>(CommonUtilityFunction.mapToResponseDTO(saleOrderDetails, SUCCESS.name()), HttpStatus.OK);
     }
 
-    private void calculateQuantity(SaleOrderRequest saleOrderRequest) {
-        ProductDetails productDetails = productDetailsRepository.getReferenceById(saleOrderRequest.getProductId());
-        if(!ObjectUtils.isEmpty(productDetails)) {
-            Double updatedQuantity = productDetails.getProductNetQuantity() - saleOrderRequest.getQuantity();
-            productDetails.setProductNetQuantity(updatedQuantity);
-            productDetailsRepository.save(productDetails);
+    private void calculateQuantity(SaleOrderDetails saleOrderDetails) {
+        InventoryDetails inventoryDetails = inventoryDetailsRepository.findById(saleOrderDetails.getProductId()).orElse(null);
+        if(inventoryDetails != null) {
+            Double updatedQuantity = inventoryDetails.getNetQuantity() - saleOrderDetails.getQuantity();
+            inventoryDetails.setNetQuantity(updatedQuantity);
+            Double updatedSoldQuantity = inventoryDetails.getSoldQuantity() + saleOrderDetails.getQuantity();
+            inventoryDetails.setSoldQuantity(updatedSoldQuantity);
+            inventoryDetailsRepository.save(inventoryDetails);
         }
         else {
             throw new NSTCustomException(INVALID_PRODUCT_SELECTED.getErrorCode(),INVALID_PRODUCT_SELECTED.getMessage());
