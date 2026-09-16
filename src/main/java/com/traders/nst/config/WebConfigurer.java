@@ -1,5 +1,6 @@
 package com.traders.nst.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -7,8 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer {
 
+    @Value("${spring.application.feBaseUrl}")
+    private String baseUrl;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("/login").allowedMethods("*").allowedHeaders("*");
+        registry.addMapping("/**").allowedOrigins(baseUrl).allowedMethods("*").allowedHeaders("*");
     }
 }
