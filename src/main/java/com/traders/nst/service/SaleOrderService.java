@@ -86,7 +86,7 @@ public class SaleOrderService {
         if(inventoryDetails != null) {
             Double updatedQuantity = inventoryDetails.getNetQuantity() - saleOrderDetails.getQuantity();
             inventoryDetails.setNetQuantity(updatedQuantity);
-            Double updatedSoldQuantity = inventoryDetails.getSoldQuantity() + saleOrderDetails.getQuantity();
+            Double updatedSoldQuantity =( inventoryDetails.getSoldQuantity() == null ?0: inventoryDetails.getSoldQuantity()) + saleOrderDetails.getQuantity();
             inventoryDetails.setSoldQuantity(updatedSoldQuantity);
             inventoryDetailsRepository.save(inventoryDetails);
         }
